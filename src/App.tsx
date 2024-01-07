@@ -4,17 +4,19 @@ import Main from './components/Main';
 import instance from './common/API';
 
 function App() {
-  const [userData, setUserData] = useState<Array<userData>>([{ id: 0, image: "", title: "", category: "", description: "", price: 0, rating: { count: 0, rate: 0 } }]);
+  const [productsData, setProductsData] = useState<Array<TProductsData>>([{ id: 0, image: "", title: "", category: "", description: "", price: 0, rating: { count: 0, rate: 0 } }]);
   const [categoryData, setCategoryData] = useState<Array<string>>([""]);
   const [category, setCategory] = useState<string>("");
 
   async function apiCall() {
     try {
       const res = await instance.get("/products");
-      setUserData(res.data);
+      setProductsData(res.data);
+      console.log(res.data);
+      
       {
         const arr: string[] = [];
-        res.data.forEach((val: userData) => {
+        res.data.forEach((val: TProductsData) => {
           arr.push(val.category)
         })
         setCategoryData(removeDuplicate(arr));
@@ -36,7 +38,7 @@ function App() {
   return (
     <>
       <Header categoryData={categoryData} setCategory={setCategory} />
-      <Main data={userData} category={category} />
+      <Main productsData={productsData} category={category} />
     </>
   );
 }

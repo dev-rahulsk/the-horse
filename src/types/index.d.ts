@@ -1,4 +1,4 @@
-type userData = {
+type TProductsData = {
   id: number;
   image: string;
   title: string;
