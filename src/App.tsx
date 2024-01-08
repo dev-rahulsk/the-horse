@@ -7,13 +7,13 @@ function App() {
   const [productsData, setProductsData] = useState<Array<TProductsData>>([{ id: 0, image: "", title: "", category: "", description: "", price: 0, rating: { count: 0, rate: 0 } }]);
   const [categoryData, setCategoryData] = useState<Array<string>>([""]);
   const [category, setCategory] = useState<string>("");
+  const [searchedValue, setSearchedValue] = useState<string>("");
+  const [selected, setSelected] = useState<boolean>(true);
 
   async function apiCall() {
     try {
       const res = await instance.get("/products");
       setProductsData(res.data);
-      console.log(res.data);
-      
       {
         const arr: string[] = [];
         res.data.forEach((val: TProductsData) => {
@@ -37,8 +37,8 @@ function App() {
 
   return (
     <>
-      <Header categoryData={categoryData} setCategory={setCategory} />
-      <Main productsData={productsData} category={category} />
+      <Header productsData={productsData} category={category} categoryData={categoryData} setCategory={setCategory} setSearchedValue={setSearchedValue} selected={selected} setSelected={setSelected} />
+      <Main productsData={productsData} category={category} searchedValue={searchedValue} selected={selected} />
     </>
   );
 }
