@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import CategoryData from './CategoryData'
 
 const Header = (props: {
-  productsData: TProductsData[]
-  category: string
+  filteredDataArray: TProductsData[]
   categoryData: string[]
-  setCategory: React.Dispatch<React.SetStateAction<string>>
+  titleData: { id: number, title: string }[]
+  selectedCategory: string
+  setSelectedCategory: React.Dispatch<React.SetStateAction<string>>
   setSearchedValue: React.Dispatch<React.SetStateAction<string>>
   selected: boolean
   setSelected: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
+  
   const [collapse, setCollapse] = useState<React.SetStateAction<boolean>>(false);
   const [inputValue, setInputValue] = useState<string>("");
+
+  const handleOnClick = () => {
+    props.setSearchedValue(inputValue);
+  }
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value.toLowerCase());
@@ -19,19 +25,12 @@ const Header = (props: {
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      props.setSearchedValue(inputValue);
-      props.setCategory("");
-      e.preventDefault();
       props.setSelected(false)
+      props.setSearchedValue(inputValue);
+      e.preventDefault();
     }
   }
 
-  useEffect(() => {
-    if (inputValue === "") {
-      props.setCategory("");
-      props.setSelected(true)
-    }
-  }, [inputValue])
   return (
     <>
       <div className="navbar bg-base-100">
@@ -56,12 +55,10 @@ const Header = (props: {
                 </button>
                 <div className='pt-10'>
                   <label htmlFor="my-drawer" aria-label="close sidebar" className='h-screen'>
-                    <div
-                      onClick={() => props.setCategory("")}
-                      className='text-lg font-extralight cursor-pointer hover:border-orange-600 hover:border-s-8 hover:transition-all transition-all hover:ps-2 capitalize py-2'>All Products</div>
                     <CategoryData
+                      selectedCategory={props.selectedCategory}
                       categoryData={props.categoryData}
-                      setCategory={props.setCategory}
+                      setSelectedCategory={props.setSelectedCategory}
                       setSelected={props.setSelected}
                       setCollapse={setCollapse} />
                   </label>
@@ -78,11 +75,13 @@ const Header = (props: {
           </a>
         </div>
         <div className="navbar-end bg-base-100">
-          <button
-            onClick={() => collapse === false ? setCollapse(true) : setCollapse(false)}
-            className="btn btn-ghost btn-circle">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-          </button>
+          <label htmlFor="inputBox">
+            <button
+              onClick={() => collapse === false ? setCollapse(true) : setCollapse(false)}
+              className="btn btn-ghost btn-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            </button>
+          </label>
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
             <div className="indicator">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
@@ -98,13 +97,16 @@ const Header = (props: {
       }>
         <div className={
           collapse === false ?
-            'sm:w-96 w-64 flex items-center justify-between' :
-            'sm:w-96 w-64 flex items-center justify-between border-b-2'
+            'sm:w-96 w-64 flex items-center justify-between filter' :
+            'sm:w-96 w-64 flex items-center justify-between border-b-2 filter'
         }>
           <input
             type="text"
+            list='search'
+            id='inputBox'
             name='inputBox'
-            className="mb-3 text-2xl w-full border-none focus:outline-none"
+            autoComplete='off'
+            className="mb-3 text-2xl w-full border-none focus:outline-none "
             onChange={handleOnChange}
             value={inputValue}
             onKeyDown={handleOnKeyDown}
@@ -114,11 +116,21 @@ const Header = (props: {
                 'Search'
             }
           />
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 mb-3">
+          <datalist id="search">
+            {
+              props.titleData.map((val) => {
+                if (val.title.toLowerCase().search(inputValue) !== -1) {
+                  return (
+                    <option key={val.id} value={val.title} />
+                  )
+                }
+              })
+            }
+          </datalist>
+          <svg onClick={handleOnClick} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 mb-3">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
           </svg>
         </div>
-        <div className="ms-5 mt-1 underline" onClick={() => setCollapse(false)}>cancel</div>
       </div>
     </>
   )

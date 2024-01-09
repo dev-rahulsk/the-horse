@@ -10,6 +10,9 @@ module.exports = {
       themes: ["light"],
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [
+    require("daisyui"),
+    require('autoprefixer'),
+  ],
 }
 

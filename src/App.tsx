@@ -4,22 +4,25 @@ import Main from './components/Main';
 import instance from './common/API';
 
 function App() {
-  const [productsData, setProductsData] = useState<Array<TProductsData>>([{ id: 0, image: "", title: "", category: "", description: "", price: 0, rating: { count: 0, rate: 0 } }]);
+  const [productsDataArray, setProductsDataArray] = useState<Array<TProductsData>>([{ id: 0, image: "", title: "", category: "", description: "", price: 0, rating: { count: 0, rate: 0 } }]);
+  const [filteredDataArray, setFilteredData] = useState<Array<TProductsData>>(productsDataArray);
   const [categoryData, setCategoryData] = useState<Array<string>>([""]);
-  const [category, setCategory] = useState<string>("");
+  const [titleData, setTitleData] = useState([{ id: 0, title: "" }]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchedValue, setSearchedValue] = useState<string>("");
-  const [selected, setSelected] = useState<boolean>(true);
+  const [selected, setSelected] = useState<boolean>(true); 
 
   async function apiCall() {
     try {
       const res = await instance.get("/products");
-      setProductsData(res.data);
+      setSelectedCategory("all products")
+      setProductsDataArray(res.data);
       {
-        const arr: string[] = [];
+        const arrCategory: string[] = [];
         res.data.forEach((val: TProductsData) => {
-          arr.push(val.category)
+          arrCategory.push("all products", val.category)
         })
-        setCategoryData(removeDuplicate(arr));
+        setCategoryData(removeDuplicate(arrCategory));
       }
     } catch {
       console.log("Data Response Error");
@@ -35,10 +38,40 @@ function App() {
     apiCall();
   }, [])
 
+  useEffect(() => {
+    const arrObj: TProductsData[] = []
+    const arrTitle: { id: number, title: string }[] = [];
+    productsDataArray.forEach((val) => {
+      if (selectedCategory === val.category) {
+        arrObj.push(val);
+        arrTitle.push({ id: val.id, title: val.title });
+      }
+      else if (selectedCategory === "all products") {
+        arrObj.push(val);
+        arrTitle.push({ id: val.id, title: val.title });
+      }
+    })
+    setFilteredData(arrObj);
+    setTitleData(arrTitle);
+  }, [selectedCategory])
+
   return (
     <>
-      <Header productsData={productsData} category={category} categoryData={categoryData} setCategory={setCategory} setSearchedValue={setSearchedValue} selected={selected} setSelected={setSelected} />
-      <Main productsData={productsData} category={category} searchedValue={searchedValue} selected={selected} />
+      <Header
+        filteredDataArray={filteredDataArray}
+        selectedCategory={selectedCategory}
+        titleData={titleData} 
+        categoryData={categoryData} 
+        setSelectedCategory={setSelectedCategory} 
+        setSearchedValue={setSearchedValue} 
+        selected={selected} 
+        setSelected={setSelected} />
+      
+      <Main 
+        filteredDataArray={filteredDataArray}
+        selectedCategory={selectedCategory}
+        searchedValue={searchedValue}
+        selected={selected} />
     </>
   );
 }

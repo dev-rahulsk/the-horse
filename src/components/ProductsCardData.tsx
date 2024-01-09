@@ -1,7 +1,9 @@
 import React from 'react'
 import StarRatings from 'react-star-ratings';
 
-const ProductsData = (props: { id: number; image: string; title: string; description: string; price: number; rating: number }) => {
+const ProductsCardData = (props: {
+  id: number; image: string; title: string; description: string; price: number; rating: number
+}) => {
   return (
     <>
       <div key={props.id} className="card rounded-box place-items-center">
@@ -31,4 +33,4 @@ const ProductsData = (props: { id: number; image: string; title: string; descrip
   )
 }
 
-export default ProductsData
+export default ProductsCardData

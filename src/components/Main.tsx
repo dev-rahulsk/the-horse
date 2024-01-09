@@ -1,36 +1,35 @@
 import React from 'react'
-import ProductsData from './ProductsData';
+import ProductsCardData from './ProductsCardData';
 
-const Main = (props: { productsData: TProductsData[], category: string, searchedValue: string, selected: boolean }) => {
-  function ShowCategory() {
+const Main = (props: {
+  filteredDataArray: TProductsData[], 
+  selectedCategory: string, 
+  searchedValue: string, 
+  selected: boolean,
+}) => {
+
+  function ShowCategoryData() {
     return (
       <>
         {
-          props.productsData.map((val) => {
-            if (props.category === "") {
-              return (
-                <ProductsData key={val.id} id={val.id} image={val.image} title={val.title} description={val.description} price={val.price} rating={val.rating.rate} />
-              )
-            }
-            else if (val.category === props.category) {
-              return (
-                <ProductsData key={val.id} id={val.id} image={val.image} title={val.title} description={val.description} price={val.price} rating={val.rating.rate} />
-              )
-            }
+          props.filteredDataArray.map((val) => {
+            return (
+              <ProductsCardData key={val.id} id={val.id} image={val.image} title={val.title} description={val.description} price={val.price} rating={val.rating.rate} />
+            )
           })
         }
       </>
     )
   }
 
-  function ShowSearch() {
+  function ShowSearchData() {
     return (
       <>
         {
-          props.productsData.map((val) => {
+          props.filteredDataArray.map((val) => {
             if (val.title.toLowerCase().search(props.searchedValue) !== -1) {
               return (
-                <ProductsData key={val.id} id={val.id} image={val.image} title={val.title} description={val.description} price={val.price} rating={val.rating.rate} />
+                <ProductsCardData key={val.id} id={val.id} image={val.image} title={val.title} description={val.description} price={val.price} rating={val.rating.rate} />
               )
             }
           })
@@ -43,7 +42,7 @@ const Main = (props: { productsData: TProductsData[], category: string, searched
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-10 w-full p-10 pt-0 justify-center">
         {
-          props.selected === true ? <ShowCategory /> : <ShowSearch />
+          props.selected === true ? <ShowCategoryData /> : <ShowSearchData />
         }
       </div>
     </>
