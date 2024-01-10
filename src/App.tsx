@@ -4,7 +4,7 @@ import Main from './components/Main';
 import instance from './common/API';
 
 function App() {
-  const [productsDataArray, setProductsDataArray] = useState<Array<TProductsData>>([{ id: 0, image: "", title: "", category: "", description: "", price: 0, rating: { count: 0, rate: 0 } }]);
+  const [productsDataArray, setProductsDataArray] = useState<Array<TProductsData>>([]);
   const [filteredDataArray, setFilteredData] = useState<Array<TProductsData>>(productsDataArray);
   const [categoryData, setCategoryData] = useState<Array<string>>([""]);
   const [titleData, setTitleData] = useState([{ id: 0, title: "" }]);

@@ -15,11 +15,12 @@ const CategoryData = (props: {
             <div
               key={index}
               onClick={() => { props.setSelectedCategory(val); props.setSelected(true); props.setCollapse(false) }}
-              className='text-lg font-extralight cursor-pointer hover:border-orange-600 hover:border-s-8 hover:transition-all transition-all hover:ps-2 capitalize py-2'>{val}</div> :
+              className='text-lg font-normal cursor-pointer hover:border-orange-600 hover:border-s-8 hover:transition-all transition-all hover:ps-2 capitalize py-2'>{val}</div> :
+            
             <div
               key={index}
               onClick={() => { props.setSelectedCategory(val); props.setSelected(true); props.setCollapse(false) }}
-              className='text-lg font-extralight cursor-pointer border-orange-600 border-s-8 hover:transition-all transition-all ps-2 capitalize py-2'>{val}</div>
+              className='text-lg font-semibold underline-offset-1 cursor-pointer border-orange-600 border-s-8 hover:transition-all transition-all ps-2 capitalize py-2'>{val}</div>
         )
       }
     </>
