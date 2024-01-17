@@ -23,12 +23,12 @@ const CategoryData = (props: {
       navigate("/");
     }
     else {
-      navigate(`/category/${val}`);
+      navigate(`/category/${val.replace(/\s/g, '-')}`);
     }
   }
 
   useEffect(() => {
-    cat === undefined ? setSelectedCategory("all products") : setSelectedCategory(cat);
+    cat === undefined ? setSelectedCategory("all products") : setSelectedCategory(`${cat.replace(/-/g, ' ')}`);    
   }, [cat])
 
   return (

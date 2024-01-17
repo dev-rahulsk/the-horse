@@ -19,7 +19,6 @@ const Header = () => {
 
   const [filteredDataArray, setFilteredDataArray] = useState<Array<TProductsData>>([])
   const [titleData, setTitleData] = useState<Array<{ id: number, title: string }>>([])
-  const [categoryData, setCategoryData] = useState<Array<string>>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const [searchedValue, setSearchedValue] = useState<string>("");
@@ -30,7 +29,6 @@ const Header = () => {
     productsDataArray.forEach((val: TProductsData) => {
       arrCategory.push(val.category)
     })
-    setCategoryData(removeDuplicate(arrCategory));
     dispatch(getCategory(removeDuplicate(arrCategory)));
     setSelectedCategory("all products")
   }, [productsDataArray])
