@@ -1,78 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import Header from './components/Header';
-import Main from './components/Main';
+import React, { createContext, useEffect } from 'react';
+import Main from './pages/Main';
 import instance from './common/API';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import MasterLayout from './pages/MasterLayout';
+import { productsDataReceived } from './store/apiFetchRedux';
+import { useDispatch } from 'react-redux';
+import ProductsInfoPage from './pages/ProductsInfoPage';
+
+export const AppContext = createContext<TProductsData[]>([]);
 
 function App() {
-  const [productsDataArray, setProductsDataArray] = useState<Array<TProductsData>>([]);
-  const [filteredDataArray, setFilteredData] = useState<Array<TProductsData>>(productsDataArray);
-  const [categoryData, setCategoryData] = useState<Array<string>>([""]);
-  const [titleData, setTitleData] = useState([{ id: 0, title: "" }]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [searchedValue, setSearchedValue] = useState<string>("");
-  const [selected, setSelected] = useState<boolean>(true); 
+  const dispatch = useDispatch();
 
-  async function apiCall() {
+  useEffect(() => {
+    fetchData();
+  }, [])
+
+  const fetchData = async () => {
     try {
       const res = await instance.get("/products");
-      setSelectedCategory("all products")
-      setProductsDataArray(res.data);
-      {
-        const arrCategory: string[] = [];
-        res.data.forEach((val: TProductsData) => {
-          arrCategory.push("all products", val.category)
-        })
-        setCategoryData(removeDuplicate(arrCategory));
-      }
-    } catch {
-      console.log("Data Response Error");
+      dispatch(productsDataReceived(res.data));
+    } catch (err) {
+      console.log("Data Response Error", err);
     }
   }
 
-  function removeDuplicate(arr: string[]) {
-    let outputArray = Array.from(new Set(arr));
-    return outputArray;
-  }
-
-  useEffect(() => {
-    apiCall();
-  }, [])
-
-  useEffect(() => {
-    const arrObj: TProductsData[] = []
-    const arrTitle: { id: number, title: string }[] = [];
-    productsDataArray.forEach((val) => {
-      if (selectedCategory === val.category) {
-        arrObj.push(val);
-        arrTitle.push({ id: val.id, title: val.title });
-      }
-      else if (selectedCategory === "all products") {
-        arrObj.push(val);
-        arrTitle.push({ id: val.id, title: val.title });
-      }
-    })
-    setFilteredData(arrObj);
-    setTitleData(arrTitle);
-  }, [selectedCategory])
-
   return (
-    <>
-      <Header
-        filteredDataArray={filteredDataArray}
-        selectedCategory={selectedCategory}
-        titleData={titleData} 
-        categoryData={categoryData} 
-        setSelectedCategory={setSelectedCategory} 
-        setSearchedValue={setSearchedValue} 
-        selected={selected} 
-        setSelected={setSelected} />
-      
-      <Main 
-        filteredDataArray={filteredDataArray}
-        selectedCategory={selectedCategory}
-        searchedValue={searchedValue}
-        selected={selected} />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MasterLayout />}>
+          <Route index element={<Main />} />
+          <Route path="/category/:cat" element={<Main />} />
+          <Route path="/product" element={<ProductsInfoPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter >
   );
 }
 

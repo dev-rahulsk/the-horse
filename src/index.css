@@ -2,18 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
 
 body {
+  font-family: 'Fira Sans', sans-serif;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-p {
-  font-family: 'Fira Sans', sans-serif;
+input::-webkit-calendar-picker-indicator {
+  display: none !important;
 }
 
-input {
-  font-family: 'Fira Sans', sans-serif;
+.gradient {
+  background: rgb(255, 255, 255);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.5136258143075505) 100%);
 }
