@@ -9,7 +9,7 @@ import { IoMdClose } from "react-icons/io";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineShoppingCart, HiOutlineMenuAlt2 } from "react-icons/hi";
 import { BsArrowRight } from "react-icons/bs";
-import { getCategory } from '../store/categoriesRedux'
+import { setCategory } from '../store/categoriesRedux'
 
 const Header = () => {
   const productsDataArray = useSelector((state: RootState) => state.apiFetch.productsDataArray)
@@ -29,14 +29,10 @@ const Header = () => {
     productsDataArray.forEach((val: TProductsData) => {
       arrCategory.push(val.category)
     })
-    dispatch(getCategory(removeDuplicate(arrCategory)));
+    let categories = Array.from(new Set(arrCategory));
+    dispatch(setCategory((categories)));
     setSelectedCategory("all products")
   }, [productsDataArray])
-
-  function removeDuplicate(arr: string[]) {
-    let outputArray = Array.from(new Set(arr));
-    return outputArray;
-  }
 
   useEffect(() => {
     setSearchedValue("");
