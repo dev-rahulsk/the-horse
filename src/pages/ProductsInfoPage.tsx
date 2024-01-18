@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
 import { RootState } from '../store/store';
-import { BsArrowLeft } from "react-icons/bs";
+import { RiArrowGoBackFill } from "react-icons/ri";
 
 const ProductsInfoPage = () => {
   const location = useLocation();
@@ -26,7 +26,7 @@ const ProductsInfoPage = () => {
     <>
       <div className="md:px-24 p-5 pt-0 -m-2 mx-auto text-gray-700 body-font overflow-hidden">
         <div className='flex justify-end cursor-pointer'>
-          <BsArrowLeft onClick={() => navigate("/")} className='sm:h-6 sm:w-6 h-5 w-5 mb-2' />
+          <RiArrowGoBackFill onClick={() => navigate("/")} className='sm:h-6 sm:w-6 h-5 w-5 mb-2' />
         </div>
         <div className="md:w-full xs:w-4/5 mx-auto flex flex-wrap items-center">
           <img className="max-h-96 md:w-[40%] w-full object-scale-down md:border-0 border-2 border-gray-200 object-center md:pe-10 md:p-0 md:py-0 p-10 py-5" src={productInfo?.image} alt="products" />
@@ -46,22 +46,26 @@ const ProductsInfoPage = () => {
             <p className="leading-relaxed text-justify">{productInfo?.description}</p>
             <div className="my-6 border-b-2 border-gray-200"></div>
             <div className="flex justify-center">
-              <button className="btn py-2 px-6 text-white bg-orange-600 hover:bg-orange-700 border-0  focus:outline-none rounded mr-4">Add to cart</button>
-              <button className="btn py-2 px-6 text-white bg-slate-500 hover:bg-slate-600 border-0 focus:outline-none rounded ml-4">Buy Now</button>
+              <button className="btn md:w-40 w-28 text-white bg-cyan-700 hover:bg-cyan-800 border-0 focus:outline-none rounded-3xl mr-4">Add to cart</button>
+              <button className="btn md:w-40 w-28 text-white bg-zinc-700 hover:bg-zinc-800 border-0 focus:outline-none rounded-3xl ml-4">Buy Now</button>
             </div>
           </div>
         </div>
       </div>
-      <div className="md:p-24 p-5">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-10">Customers also bought</h2>
-        <div className="w-full space-x-10 rounded-box overflow-x-scroll inline-flex pb-2">
+      <div className="md:p-16 md:pb-10 pb-10 p-5">
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-5">Customers also bought</h2>
+        <div className="carousel w-full rounded-box overflow-x-scroll inline-flex pb-2">
           {similarProducts.map((val) =>
-            <div
-              key={val.id}
-              onClick={() => navigate("/product", { state: val })}
-              className="carousel-item rounded-box gradient cursor-pointer flex-col">
-              <img src={val.image} alt='' className="p-16 -z-10 rounded-box h-96 w-80 object-scale-down" />
-            </div>
+            <>
+              <div
+                key={val.id}
+                onClick={() => navigate(`/product/${val.id}`, { state: val })}>
+                <div className="carousel-item rounded-box cursor-pointer">
+                  <img src={val.image} alt='' className="md:max-h-96 max-h-60 max-w-64 md:p-5 -z-10 rounded-box aspect-square object-scale-down" />
+                </div>
+                <h1 className="text-lg max-w-64 font-extrabold mb-2 px-4 line-clamp-2 text-center cursor-pointer">{val.title}</h1>
+              </div>
+            </>
           )}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import ProductsCard from '../common/ProductsCard';
+import ProductsCard from '../components/ProductsCard';
 import NoProduct from '../assets/no-product.gif'
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
@@ -15,7 +15,7 @@ const Main = () => {
 
   function ShowProducts() {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-10 w-full p-10 pt-0 justify-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-10 w-full p-10 pb-10 pt-0 justify-center">
         {
           filteredDataArray.map((val: TProductsData) => {
             return (
@@ -30,7 +30,7 @@ const Main = () => {
   function ShowError() {
     return (
       <div className="flex justify-center">
-        <img src={NoProduct} alt="no-products" className='' />
+        <img src={NoProduct} alt="no-products" className='object-scale-down' />
       </div>
     )
   }

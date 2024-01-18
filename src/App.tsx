@@ -1,5 +1,5 @@
 import React, { createContext, useEffect } from 'react';
-import Main from './pages/Main';
+import Main from './pages/AllProductsPage';
 import instance from './common/API';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MasterLayout from './pages/MasterLayout';
@@ -31,7 +31,7 @@ function App() {
         <Route path="/" element={<MasterLayout />}>
           <Route index element={<Main />} />
           <Route path="/category/:cat" element={<Main />} />
-          <Route path="/product" element={<ProductsInfoPage />} />
+          <Route path="/product/:id" element={<ProductsInfoPage />} />
         </Route>
       </Routes>
     </BrowserRouter >

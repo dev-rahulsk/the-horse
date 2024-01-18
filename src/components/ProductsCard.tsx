@@ -35,7 +35,7 @@ const ProductsCardData = (props: {
           </div>
         </div>
         <div
-          onClick={() => navigate("/product", { state: data })}
+          onClick={() => navigate(`/product/${data.id}`, { state: data })}
           className="absolute rounded-box flex justify-center items-center left-0 w-full h-0 bg-gradient-to-b from-slate-600 to-slate-600 via-slate-500 opacity-0 group-hover:h-full group-hover:opacity-40 duration-500">
           <button className="text-normal hover:outline-none rounded-full btn z-30" onClick={handleOnBtnClick}>Quick Add</button>
         </div>
