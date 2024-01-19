@@ -11,4 +11,3 @@ const HeaderLogo = () => {
 }
 
 export default HeaderLogo
-

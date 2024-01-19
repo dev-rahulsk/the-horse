@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import ProductsCard from '../components/ProductsCard';
 import NoProduct from '../assets/no-product.gif'
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { filteredData } from '../store/productsApiRedux';
 
-const Main = () => {
-  const filteredDataArray = useSelector((state: RootState) => state.filteredData.filteredDataArray)
+const AllProducts = () => {
+  const filteredDataArray = useSelector(filteredData)
   const [checkError, setCheckError] = useState<boolean>(true);
 
   useEffect(() => {
@@ -36,8 +36,8 @@ const Main = () => {
   }
 
   return (
-    checkError === false ? <ShowProducts /> : <ShowError />
+    checkError === false ? ShowProducts() : ShowError()
   )
 }
 
-export default Main
+export default AllProducts

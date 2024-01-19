@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
 const Input = (props: {
   inputValue: string
@@ -18,16 +18,18 @@ const Input = (props: {
     collapse,
     titleData,
   } = props;
+  const searchInput = useRef<HTMLInputElement>(null);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value.toLowerCase());
   }
-  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setSearchedValue(inputValue)
-      e.preventDefault();
-    }
-  }
+  // const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === "Enter") {
+  //     setSearchedValue(inputValue)
+  //     searchInput.current?.blur();
+  //     e.preventDefault();
+  //   }
+  // }
 
   return (
     <>
@@ -38,8 +40,9 @@ const Input = (props: {
         autoComplete='off'
         className="mb-3 text-2xl w-full border-none focus:outline-none "
         value={inputValue}
+        ref={searchInput}
         onChange={handleOnChange}
-        onKeyDown={handleOnKeyDown}
+        // onKeyDown={handleOnKeyDown}
         placeholder={
           collapse === false ?
             '' :

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import FooterLogo from "../assets/the-horse-logo.png"
 import { FaInstagram, FaSnapchat, FaLinkedinIn } from "react-icons/fa";
 
-
 const Footer = () => {
   return (
     <>
@@ -19,13 +18,13 @@ const Footer = () => {
         </aside>
         <nav>
           <div className="grid grid-flow-col gap-4">
-            <a href="https://www.instagram.com/justanother._.rahul/" target='_blank'>
+            <a href="https://www.instagram.com/justanother._.rahul/" target='_blank' rel="noreferrer">
               <FaInstagram className='h-6 w-6' />
             </a>
             <a href="https://www.linkedin.com/in/rahul-singh-khichi-b07685164/" target="_blank" rel="noopener noreferrer">
               <FaLinkedinIn className='h-6 w-6' />
             </a>
-            <a href="https://www.snapchat.com/add/bittu_bhaiyaa/" target="_blank">
+            <a href="https://www.snapchat.com/add/bittu_bhaiyaa/" target="_blank" rel="noreferrer">
               <FaSnapchat className='h-6 w-6' />
             </a>
           </div>

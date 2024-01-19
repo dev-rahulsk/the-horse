@@ -1,35 +1,28 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
-import { RootState } from '../store/store'
+import { useNavigate } from 'react-router-dom'
+import { categoryData, selectedCat } from '../store/productsApiRedux'
 
 const CategoryData = (props: {
-  selectedCategory: string
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string>>
   setCollapse: React.Dispatch<React.SetStateAction<React.SetStateAction<boolean>>>;
 }) => {
   const {
-    selectedCategory,
-    setSelectedCategory,
     setCollapse,
   } = props;
-  const category = useSelector((state: RootState) => state.categories.category)
+  const category = useSelector(categoryData)
+  const selectedCategory = useSelector(selectedCat)
   const navigate = useNavigate();
-  let { cat } = useParams();
+  const all = "all products";
 
   function getCategory(val: string) {
     setCollapse(false);
-    if (val === "all products") {
+    if (val === all) {
       navigate("/");
     }
     else {
-      navigate(`/category/${val.replace(/\s/g, '-')}`);
+      navigate(`/category/${val}`);
     }
   }
-
-  useEffect(() => {
-    cat === undefined ? setSelectedCategory("all products") : setSelectedCategory(`${cat.replace(/-/g, ' ')}`);    
-  }, [cat])
 
   return (
     <>

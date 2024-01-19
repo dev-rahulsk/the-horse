@@ -7,37 +7,30 @@ import { MdCenterFocusStrong } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 import { FiSearch } from "react-icons/fi";
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { RootState } from '../store/store'
-import { setCategory } from '../store/categoriesRedux'
-import { filteredDataReceived } from '../store/filteredDataRedux'
+import { Link, useParams } from 'react-router-dom'
+import { cartValue } from '../store/cartRedux';
+import { filteredData, productsData, selectedCat, setFilteredData, setSelectedCategory } from '../store/productsApiRedux';
 
 const Header = () => {
-  const productsDataArray = useSelector((state: RootState) => state.apiFetch.productsDataArray)
-  const location = useLocation();
+  const productsDataArray = useSelector(productsData);
+  const filteredDataArray = useSelector(filteredData)
+  const selectedCategory = useSelector(selectedCat)
+  const value = useSelector(cartValue)
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { id } = useParams();
-  
-  const [filteredDataArray, setFilteredDataArray] = useState<Array<TProductsData>>([])
+  const { cat } = useParams();
+  const all = "all products";
+
   const [titleData, setTitleData] = useState<Array<{ id: number, title: string }>>([])
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const [searchedValue, setSearchedValue] = useState<string>("");
   const [collapse, setCollapse] = useState<React.SetStateAction<boolean>>(false);
 
   useEffect(() => {
-    const arrCategory: string[] = ["all products"];
-    productsDataArray.forEach((val: TProductsData) => {
-      arrCategory.push(val.category)
-    })
-    let categories = Array.from(new Set(arrCategory));
-    dispatch(setCategory((categories)));
-    setSelectedCategory("all products")
-  }, [productsDataArray])
+    cat === undefined ? dispatch(setSelectedCategory(all)) : dispatch(setSelectedCategory(`${cat}`));
+  }, [cat])
 
   useEffect(() => {
-    setSearchedValue("");
+    setInputValue("");
     const arrObj: TProductsData[] = [];
     const arrTitle: { id: number, title: string }[] = [];
     productsDataArray.forEach((val: TProductsData) => {
@@ -45,31 +38,32 @@ const Header = () => {
         arrObj.push(val);
         arrTitle.push({ id: val.id, title: val.title });
       }
-      else if (selectedCategory === "all products") {
+      else if (selectedCategory === all) {
         arrObj.push(val);
         arrTitle.push({ id: val.id, title: val.title });
       }
     })
-    setFilteredDataArray(arrObj)
-    dispatch(filteredDataReceived(arrObj));
+    dispatch(setFilteredData(arrObj));
     setTitleData(arrTitle);
-  }, [selectedCategory, productsDataArray])
+  }, [selectedCategory])
 
   useEffect(() => {
     const arrObj: TProductsData[] = []
-    filteredDataArray.forEach((val) => {
+    filteredDataArray.forEach((val: TProductsData) => {
       if (val.title.toLowerCase().search(searchedValue) !== -1) {
         arrObj.push(val);
       }
     })
-    if (location.pathname===`/product/${id}`) {
-      navigate(-1);
-    }
-    dispatch(filteredDataReceived(arrObj));
+    dispatch(setFilteredData(arrObj));
   }, [searchedValue])
 
   const handleOnClick = () => {
     setSearchedValue(inputValue);
+  }
+
+  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    setSearchedValue(inputValue);
+    e.preventDefault();
   }
 
   useEffect(() => {
@@ -99,8 +93,6 @@ const Header = () => {
                 <div className='pt-10'>
                   <label htmlFor="my-drawer" aria-label="close sidebar" className='h-screen'>
                     <CategoryData
-                      selectedCategory={selectedCategory}
-                      setSelectedCategory={setSelectedCategory}
                       setCollapse={setCollapse} />
                   </label>
                 </div>
@@ -121,10 +113,23 @@ const Header = () => {
               <FiSearch className="h-5 w-5" />
             </label>
           </button>
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
-            <div className="indicator">
-              <HiOutlineShoppingCart className="h-5 w-5" />
-              <span className="badge badge-sm border-0 bg-cyan-700 indicator-item text-white">0</span>
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+              <div className="indicator">
+                <HiOutlineShoppingCart className="h-5 w-5" />
+                <span className="badge badge-sm border-0 bg-cyan-700 indicator-item text-white">{value}</span>
+              </div>
+            </div>
+            <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
+              <div className="card-body">
+                <span className="font-bold text-lg">{value} Items</span>
+                <span className="text-cyan-700">Subtotal: $0</span>
+                <Link to={"/cart"}>
+                  <div className="card-actions">
+                    <button className="btn bg-cyan-700 hover:bg-cyan-800 btn-block text-white">View cart</button>
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -134,11 +139,13 @@ const Header = () => {
           "w-full -z-50 flex justify-center border-b-2 transition-all -translate-y-11" :
           "w-full -z-50 flex justify-center pt-4 pb-6 transition-all"
       }>
-        <div className={
-          collapse === false ?
-            'sm:w-96 w-64 flex items-center justify-between ' :
-            'sm:w-96 w-64 flex items-center justify-between border-b-2 '
-        }>
+        <form
+          onSubmit={handleOnSubmit}
+          className={
+            collapse === false ?
+              'sm:w-96 w-64 flex items-center justify-between ' :
+              'sm:w-96 w-64 flex items-center justify-between border-b-2 '
+          }>
           <Input
             inputValue={inputValue}
             setInputValue={setInputValue}
@@ -147,7 +154,7 @@ const Header = () => {
             titleData={titleData}
           />
           <MdCenterFocusStrong onClick={handleOnClick} className="w-6 h-6 mb-3 cursor-pointer" />
-        </div>
+        </form>
       </div>
     </>
   )

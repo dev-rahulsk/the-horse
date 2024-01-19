@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
-import { RootState } from '../store/store';
 import { RiArrowGoBackFill } from "react-icons/ri";
+import { increment } from '../store/cartRedux';
+import { productsData } from '../store/productsApiRedux';
 
 const ProductsInfoPage = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const productsDataArray = useSelector((state: RootState) => state.apiFetch.productsDataArray)
+  const productsDataArray = useSelector(productsData)
   const [productInfo, setProductInfo] = useState<TProductsData>();
   const [similarProducts, setSimilarProducts] = useState<TProductsData[]>([]);
 
@@ -21,6 +23,10 @@ const ProductsInfoPage = () => {
     })
     setSimilarProducts(data);
   }, [location.state])
+
+  const handleOnBtnClick = () => {
+    dispatch(increment());
+  }
 
   return (
     <>
@@ -46,7 +52,7 @@ const ProductsInfoPage = () => {
             <p className="leading-relaxed text-justify">{productInfo?.description}</p>
             <div className="my-6 border-b-2 border-gray-200"></div>
             <div className="flex justify-center">
-              <button className="btn md:w-40 w-28 text-white bg-cyan-700 hover:bg-cyan-800 border-0 focus:outline-none rounded-3xl mr-4">Add to cart</button>
+              <button className="btn md:w-40 w-28 text-white bg-cyan-700 hover:bg-cyan-800 border-0 focus:outline-none rounded-3xl mr-4" onClick={handleOnBtnClick}>Add to cart</button>
               <button className="btn md:w-40 w-28 text-white bg-zinc-700 hover:bg-zinc-800 border-0 focus:outline-none rounded-3xl ml-4">Buy Now</button>
             </div>
           </div>
