@@ -20,9 +20,7 @@ const ProductsCardData = (props: {
     <>
       <div key={data.id} className="card group relative rounded-box justify-center place-items-center cursor-pointer">
         <div className="card card-compact bg-base-100 shadow-xl w-full h-full">
-          {/* <figure className=''> */}
             <img src={data.image} className='w-52 h-52 aspect-square mx-auto m-5 object-scale-down' alt="Shoes" />
-          {/* </figure> */}
           <div className="card-body">
             <h2 className="card-title line-clamp-1">{data.title}</h2>
             <p className="overflow-ellipsis line-clamp-2">{data.description}</p>

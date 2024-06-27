@@ -7,16 +7,17 @@ import { MdCenterFocusStrong } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 import { FiSearch } from "react-icons/fi";
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { cartValue } from '../store/cartRedux';
-import { filteredData, productsData, selectedCat, setFilteredData, setSelectedCategory } from '../store/productsApiRedux';
+import { productsData, selectedCat, setFilteredData, setSelectedCategory } from '../store/productsApiRedux';
 
 const Header = () => {
-  const productsDataArray = useSelector(productsData);
-  const filteredDataArray = useSelector(filteredData)
+  const productsDataArray = useSelector(productsData)
   const selectedCategory = useSelector(selectedCat)
   const value = useSelector(cartValue)
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { cat } = useParams();
   const all = "all products";
 
@@ -26,8 +27,16 @@ const Header = () => {
   const [collapse, setCollapse] = useState<React.SetStateAction<boolean>>(false);
 
   useEffect(() => {
-    cat === undefined ? dispatch(setSelectedCategory(all)) : dispatch(setSelectedCategory(`${cat}`));
-  }, [cat])
+    if (cat === undefined) {
+      if (location.pathname === "/") {
+        dispatch(setSelectedCategory(all));
+        console.log(location.pathname);
+      }
+    }
+    else {
+      dispatch(setSelectedCategory(`${cat}`));
+    }
+  }, [location.pathname, cat])
 
   useEffect(() => {
     setInputValue("");
@@ -49,8 +58,8 @@ const Header = () => {
 
   useEffect(() => {
     const arrObj: TProductsData[] = []
-    filteredDataArray.forEach((val: TProductsData) => {
-      if (val.title.toLowerCase().search(searchedValue) !== -1) {
+    productsDataArray.forEach((val: TProductsData) => {
+      if (val.title.toLowerCase().search(searchedValue) !== -1 && (val.category === selectedCategory || selectedCategory === all)) {
         arrObj.push(val);
       }
     })
@@ -62,6 +71,12 @@ const Header = () => {
   }
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (selectedCategory === all) {
+      navigate("/");
+    }
+    else {
+      navigate(`/category/${selectedCategory}`);
+    }
     setSearchedValue(inputValue);
     e.preventDefault();
   }

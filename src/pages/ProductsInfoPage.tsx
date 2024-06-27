@@ -4,12 +4,14 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { increment } from '../store/cartRedux';
-import { productsData } from '../store/productsApiRedux';
+import { productsData, selectedCat } from '../store/productsApiRedux';
 
 const ProductsInfoPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+  const selectedCategory = useSelector(selectedCat);
+  const all = "all products";
   const productsDataArray = useSelector(productsData)
   const [productInfo, setProductInfo] = useState<TProductsData>();
   const [similarProducts, setSimilarProducts] = useState<TProductsData[]>([]);
@@ -24,6 +26,15 @@ const ProductsInfoPage = () => {
     setSimilarProducts(data);
   }, [location.state])
 
+  const handleOnClick = () => {
+    if (selectedCategory === all) {
+      navigate("/");
+    }
+    else {
+      navigate(`/category/${selectedCategory}`);
+    }
+  }
+
   const handleOnBtnClick = () => {
     dispatch(increment());
   }
@@ -32,7 +43,7 @@ const ProductsInfoPage = () => {
     <>
       <div className="md:px-24 p-5 pt-0 -m-2 mx-auto text-gray-700 body-font overflow-hidden">
         <div className='flex justify-end cursor-pointer'>
-          <RiArrowGoBackFill onClick={() => navigate("/")} className='sm:h-6 sm:w-6 h-5 w-5 mb-2' />
+          <RiArrowGoBackFill onClick={handleOnClick} className='sm:h-6 sm:w-6 h-5 w-5 mb-2' />
         </div>
         <div className="md:w-full xs:w-4/5 mx-auto flex flex-wrap items-center">
           <img className="max-h-96 md:w-[40%] w-full object-scale-down md:border-0 border-2 border-gray-200 object-center md:pe-10 md:p-0 md:py-0 p-10 py-5" src={productInfo?.image} alt="products" />
@@ -62,16 +73,14 @@ const ProductsInfoPage = () => {
         <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-5">Customers also bought</h2>
         <div className="carousel w-full rounded-box overflow-x-scroll inline-flex pb-2">
           {similarProducts.map((val) =>
-            <>
-              <div
-                key={val.id}
-                onClick={() => navigate(`/product/${val.id}`, { state: val })}>
-                <div className="carousel-item rounded-box cursor-pointer">
-                  <img src={val.image} alt='' className="md:max-h-96 max-h-60 max-w-64 md:p-5 -z-10 rounded-box aspect-square object-scale-down" />
-                </div>
-                <h1 className="text-lg max-w-64 font-extrabold mb-2 px-4 line-clamp-2 text-center cursor-pointer">{val.title}</h1>
+            <div
+              key={val.id}
+              onClick={() => navigate(`/product/${val.id}`, { state: val })}>
+              <div className="carousel-item rounded-box cursor-pointer">
+                <img src={val.image} alt='' className="md:max-h-96 max-h-60 max-w-64 md:p-5 -z-10 rounded-box aspect-square object-scale-down" />
               </div>
-            </>
+              <h1 className="text-lg max-w-64 font-extrabold mb-2 px-4 line-clamp-2 text-center cursor-pointer">{val.title}</h1>
+            </div>
           )}
         </div>
       </div>

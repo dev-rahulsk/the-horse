@@ -12,6 +12,7 @@ export const apiCallSlice = createSlice({
   reducers: {
     setProductsData: (state, action) => {
       state.productsDataArray = action.payload;
+      state.filteredDataArray = action.payload;
     },
     setFilteredData: (state, action) => {
       state.filteredDataArray = action.payload;

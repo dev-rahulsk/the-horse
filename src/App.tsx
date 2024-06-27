@@ -3,7 +3,7 @@ import AllProducts from './pages/AllProductsPage';
 import instance from './common/API';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MasterLayout from './pages/MasterLayout';
-import { productsData, setCategory, setFilteredData, setProductsData } from './store/productsApiRedux';
+import { productsData, setCategory, setProductsData } from './store/productsApiRedux';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductsInfoPage from './pages/ProductsInfoPage';
 import Cart from './pages/Cart';
@@ -22,7 +22,6 @@ function App() {
     try {
       const res = await instance.get("/products");
       dispatch(setProductsData(res.data));
-      dispatch(setFilteredData(res.data));
       const arrCategory: string[] = ["all products"];
       res.data.forEach((val: TProductsData) => {
         arrCategory.push(val.category)
